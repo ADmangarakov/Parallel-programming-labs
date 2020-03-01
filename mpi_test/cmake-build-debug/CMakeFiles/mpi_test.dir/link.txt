@@ -1,0 +1,1 @@
+/usr/bin/mpicc -g   CMakeFiles/mpi_test.dir/main.c.o  -o mpi_test -lm 
