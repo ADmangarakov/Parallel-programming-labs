@@ -1,5 +1,4 @@
 #include <stdio.h>
-//#include "/usr/include/mpi/mpi.h"
 #include <mpi.h>
 #include <sys/time.h>
 #include <malloc.h>
