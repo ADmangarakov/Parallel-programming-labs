@@ -11,21 +11,23 @@
 int main(int argc, char *argv[])
 {
 	//struct timeval tv1, tv2;
+
 	int size, rank;
 	MPI_Init(&argc, &argv); // Инициализация MPI
 	MPI_Comm_size(MPI_COMM_WORLD, &size); // Получение числа процессов
 	MPI_Comm_rank(MPI_COMM_WORLD, &rank); // Получение номера процесса
 
 	int const PROCESS_NUMBER = size;
-	int const N = 12 / PROCESS_NUMBER;
+	int const N = 4 / PROCESS_NUMBER;
 
 	//gettimeofday(&tv1, NULL);
 	double *matr = NULL, *answ = NULL, *vector = NULL;
 	preset_solution(&matr, &answ, &vector, N, rank, size);
-	double const T = 1e-6;
+	double const T = 1e-4;
+	int count = 0;
 	do {
-		approximate(vector, matr, answ, N, T, rank, size);
-	} while (!is_answer_correct(vector, matr, answ, N, rank, size));
+		approximate(vector, matr, answ, N, T, rank, size, count);
+	} while (!is_answer_correct(vector, matr, answ, N, rank, size, count++));
 
 	//gettimeofday(&tv2, NULL);
 	//double dt_sec = (tv2.tv_sec - tv1.tv_sec);
