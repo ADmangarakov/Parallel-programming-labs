@@ -18,23 +18,22 @@ int main(int argc, char *argv[])
 	MPI_Comm_rank(MPI_COMM_WORLD, &rank); // Получение номера процесса
 
 	int const PROCESS_NUMBER = size;
-	int const N = 4 / PROCESS_NUMBER;
+	int const N = 10000 / PROCESS_NUMBER;
 
 	//gettimeofday(&tv1, NULL);
 	double *matr = NULL, *answ = NULL, *vector = NULL;
 	preset_solution(&matr, &answ, &vector, N, rank, size);
-	double const T = 1e-4;
+	double const T = 1e-5;
 	int count = 0;
+	double sq_norm;
 	do {
-		approximate(vector, matr, answ, N, T, rank, size, count);
-	} while (!is_answer_correct(vector, matr, answ, N, rank, size, count++));
+		sq_norm = approximate(vector, matr, answ, N, T, rank, size, count);
+	} while (!is_answer_correct(sq_norm, answ, N, rank, size, count++));
 
 	//gettimeofday(&tv2, NULL);
 	//double dt_sec = (tv2.tv_sec - tv1.tv_sec);
 	//double dt_usec = (tv2.tv_usec - tv1.tv_usec);
 	//double dt = dt_sec + 1e-6 * dt_usec;
-
-
 
 	FILE *f = NULL;
 	char filename[50];
@@ -42,13 +41,17 @@ int main(int argc, char *argv[])
 	f = fopen(filename, "w");
 
 	//fprintf(f, "time diff %e \n", dt);
-	for (int i = 0; i < N; i++) {
-		fprintf(f, "%f\n", vector[i]);
+	double *whole_vec;
+	whole_vec = make_new_vec(N*size);
+	MPI_Allgather(vector, N, MPI_DOUBLE, whole_vec, N, MPI_DOUBLE, MPI_COMM_WORLD);
+	for (int i = 0; i < N*size; i++) {
+		fprintf(f, "%f\n", whole_vec[i]);
 	}
 	fclose(f);
 	free(matr);
 	free(answ);
 	free(vector);
+	free(whole_vec);
 	MPI_Finalize();
 	return 0;
 }
