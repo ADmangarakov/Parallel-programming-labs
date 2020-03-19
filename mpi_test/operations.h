@@ -13,12 +13,21 @@ void subtract_vectors(double * const minuend_vec, double const * const sub_vec, 
 
 void mul_vec_by_numb(double * const vector, double const number, int const N);
 
-void approximate(double *vector, double const *const matrix, double const *const answers, int const N,
- double const t,
+double squares_sum(double const * const vec, int const N);
+
+double approximate(double *vector, double const *const matrix, double const *const answers, int const N,
+	double const t,
 	int const rank, int const size, int const iteration);
 
-double calc_norm(double const *const vec, int const N, int const rank, int const size, int const iteration);
+double calc_norm(double const sq_sum);
 
-bool is_answer_correct(double const *const vec, double const *const matr, double const *const answ,
- int const N,
-	int const rank, int const size, int const iteration);
+bool is_answer_correct(double const sq_sum,
+ double const *const answ,
+
+	int const N,
+
+
+	int const rank,
+	int const size, int const iteration);
+
+void print_vec(char const * const name, double const * const vec, int const rank, int const iteration, char const * const mark, int const N, int const size);
